@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Uber Fare AI</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f5f5;
+            color: #222;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           Header
+        ========================= */
+
+        header {
+            background: #111;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .status {
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        /* =========================
+           Main
+        ========================= */
+
+        .container {
+            width: 86%;
+            max-width: 1200px;
+            margin: 45px auto;
+        }
+
+        .hero {
+            margin-bottom: 30px;
+        }
+
+        .hero h1 {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* =========================
+           Form
+        ========================= */
+
+        form {
+            display: grid;
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 28px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+        }
+
+        .card h2 {
+            font-size: 21px;
+            margin-bottom: 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #ddd;
+            border-radius: 9px;
+            font-size: 14px;
+            background: white;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #111;
+        }
+
+        input::placeholder {
+            color: #aaa;
+        }
+
+        /* =========================
+           Button
+        ========================= */
+
+        .button-container {
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            background: #111;
+            color: white;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #333;
+        }
+
+        /* =========================
+           Prediction
+        ========================= */
+
+        .prediction {
+            margin-top: 25px;
+            background: white;
+            border-radius: 14px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+        }
+
+        .prediction h2 {
+            margin-bottom: 10px;
+        }
+
+        .fare {
+            font-size: 42px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .note {
+            margin-top: 8px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        /* =========================
+           Responsive
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .container {
+                width: 92%;
+                margin: 30px auto;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 16px 4%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Uber Fare AI</div>
+    <div class="status">Model Online</div>
+</header>
+
+
+<div class="container">
+
+    <div class="hero">
+        <h1>Uber Fare Prediction</h1>
+        <p>
+            Enter the trip information below to estimate the fare using the trained machine learning model.
+        </p>
+    </div>
+
+
+    <form action="/predict" method="POST">
+
+        <!-- =========================
+             Trip Information
+        ========================== -->
+
+        <div class="card">
+
+            <h2>Trip Information</h2>
+
+            <div class="grid">
+
+                <div class="field">
+                    <label>Car Condition</label>
+
+                    <select name="car_condition" required>
+                        <option value="" disabled selected>Select car condition</option>
+                        <option value="Bad">Bad</option>
+                        <option value="Good">Good</option>
+                        <option value="Very Good">Very Good</option>
+                        <option value="Excellent">Excellent</option>
+                    </select>
+                </div>
+
+
+                <div class="field">
+                    <label>Weather</label>
+
+                    <select name="weather" required>
+                        <option value="" disabled selected>Select weather</option>
+                        <option value="windy">Windy</option>
+                        <option value="cloudy">Cloudy</option>
+                        <option value="stormy">Stormy</option>
+                        <option value="sunny">Sunny</option>
+                        <option value="rainy">Rainy</option>
+                    </select>
+                </div>
+
+
+                <div class="field">
+                    <label>Traffic Condition</label>
+
+                    <select name="traffic_condition" required>
+                        <option value="" disabled selected>Select traffic condition</option>
+                        <option value="Congested">Congested</option>
+                        <option value="Dense">Dense</option>
+                        <option value="Flow">Flow</option>
+                    </select>
+                </div>
+
+
+                <div class="field">
+                    <label>Passenger Count</label>
+
+                    <input
+                        type="number"
+                        name="passenger_count"
+                        min="1"
+                        max="6"
+                        step="1"
+                        placeholder="1 - 6"
+                        required
+                    >
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- =========================
+             Pickup & Dropoff
+        ========================== -->
+
+        <div class="card">
+
+            <h2>Pickup & Dropoff</h2>
+
+            <div class="grid">
+
+                <div class="field">
+                    <label>Pickup Longitude</label>
+
+                    <input
+                        type="number"
+                        name="pickup_longitude"
+                        min="-1.374014"
+                        max="-1.226228"
+                        step="0.000001"
+                        placeholder="-1.374014 to -1.226228"
+                        required
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label>Pickup Latitude</label>
+
+                    <input
+                        type="number"
+                        name="pickup_latitude"
+                        min="0.653100"
+                        max="0.754226"
+                        step="0.000001"
+                        placeholder="0.653100 to 0.754226"
+                        required
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label>Dropoff Longitude</label>
+
+                    <input
+                        type="number"
+                        name="dropoff_longitude"
+                        min="-1.374014"
+                        max="-1.222612"
+                        step="0.000001"
+                        placeholder="-1.374014 to -1.222612"
+                        required
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label>Dropoff Latitude</label>
+
+                    <input
+                        type="number"
+                        name="dropoff_latitude"
+                        min="0.651820"
+                        max="0.757738"
+                        step="0.000001"
+                        placeholder="0.651820 to 0.757738"
+                        required
+                    >
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- =========================
+             Date & Time
+        ========================== -->
+
+        <div class="card">
+
+            <h2>Date & Time</h2>
+
+            <div class="grid">
+
+                <div class="field">
+                    <label>Hour</label>
+
+                    <input
+                        type="number"
+                        name="hour"
+                        min="0"
+                        max="23"
+                        step="1"
+                        placeholder="0 - 23"
+                        required
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label>Day</label>
+
+                    <input
+                        type="number"
+                        name="day"
+                        min="1"
+                        max="31"
+                        step="1"
+                        placeholder="1 - 31"
+                        required
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label>Month</label>
+
+                    <input
+                        type="number"
+                        name="month"
+                        min="1"
+                        max="12"
+                        step="1"
+                        placeholder="1 - 12"
+                        required
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label>Weekday</label>
+
+                    <input
+                        type="number"
+                        name="weekday"
+                        min="0"
+                        max="6"
+                        step="1"
+                        placeholder="0 - 6"
+                        required
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label>Year</label>
+
+                    <input
+                        type="number"
+                        name="year"
+                        min="2009"
+                        max="2015"
+                        step="1"
+                        placeholder="2009 - 2015"
+                        required
+                    >
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- =========================
+             Distance Features
+        ========================== -->
+
+        <div class="card">
+
+            <h2>Distance Features</h2>
+
+            <div class="grid">
+
+                <div class="field">
+                    <label>JFK Distance</label>
+
+                    <input
+                        type="number"
+                        name="jfk_dist"
+                        min="1.017646"
+                        max="990.934710"
+                        step="0.000001"
+                        placeholder="1.017646 - 990.934710"
+                        required
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label>EWR Distance</label>
+
+                    <input
+                        type="number"
+                        name="ewr_dist"
+                        min="1.460945"
+                        max="939.916350"
+                        step="0.000001"
+                        placeholder="1.460945 - 939.916350"
+                        required
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label>LGA Distance</label>
+
+                    <input
+                        type="number"
+                        name="lga_dist"
+                        min="0.382119"
+                        max="992.227309"
+                        step="0.000001"
+                        placeholder="0.382119 - 992.227309"
+                        required
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label>SOL Distance</label>
+
+                    <input
+                        type="number"
+                        name="sol_dist"
+                        min="0.532545"
+                        max="957.298626"
+                        step="0.000001"
+                        placeholder="0.532545 - 957.298626"
+                        required
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label>NYC Distance</label>
+
+                    <input
+                        type="number"
+                        name="nyc_dist"
+                        min="0.080500"
+                        max="965.678876"
+                        step="0.000001"
+                        placeholder="0.080500 - 965.678876"
+                        required
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label>Trip Distance</label>
+
+                    <input
+                        type="number"
+                        name="distance"
+                        min="0"
+                        max="99.876304"
+                        step="0.000001"
+                        placeholder="0 - 99.876304"
+                        required
+                    >
+                </div>
+
+
+                <div class="field">
+                    <label>Bearing</label>
+
+                    <input
+                        type="number"
+                        name="bearing"
+                        min="-3.141550"
+                        max="3.141593"
+                        step="0.000001"
+                        placeholder="-3.141550 to 3.141593"
+                        required
+                    >
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- =========================
+             Predict Button
+        ========================== -->
+
+        <div class="button-container">
+
+            <button type="submit">
+                Predict Fare
+            </button>
+
+        </div>
+
+    </form>
+
+
+    {% if prediction is defined %}
+
+    <div class="prediction">
+
+        <h2>Estimated Fare</h2>
+
+        <div class="fare">
+            $ {{ prediction }}
+        </div>
+
+        <div class="note">
+            Prediction generated by the trained Tuned Random Forest model.
+        </div>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
+
